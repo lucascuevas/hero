@@ -7,7 +7,7 @@
     <h1>Listado Drive</h1>
     <?php
     foreach ($a as $file) { ?>
-   <a href=""> <?php echo $file['id'].'<br>'; } ?> </a>
+   <a href=""> <?php echo $file['name']; } ?> </a>
    
    <button onclick="hideshow()">crear doc</button>
    <button onclick="s.showSettingsDialog()">Share</button>

@@ -13,19 +13,20 @@ class Drive
 		$this->client->setIncludeGrantedScopes(true);
 		//solicitar acceso 
 		$this->client->addScope('https://www.googleapis.com/auth/drive');
-		$this->client->setAccessType('online');
-		$this->client->setAuthConfigFile('client_secrets.json');	
-
+		//$this->client->setAccessType('offline');
+		$this->client->setAuthConfigFile('client_secrets.json');		
 	}
 
 
-	
 	//Creamos un service object de la api que vamos a utilizar 
 	public function create_google_service_api ()
 	{
 		  $this->drive_service = new Google_Service_Drive($this->client);
 	}
 
+	public function client(){
+		return $this->client;
+	}
 	
 	// Autenticacion en OAuth 2.0 de googles
 	public function get_credentials(){
@@ -51,8 +52,6 @@ class Drive
 		}
 			$this->client->setAccessToken($_SESSION['access_token']);
 		
-		
-  		
 	}
 
 
@@ -60,8 +59,8 @@ class Drive
 	de google drive */
 	public function get_list_files(){
 		 $optParams = array(
-	'fields' => 'nextPageToken, files(id, name)',
-	'q' => "'root' in parents");
+			'fields' => 'nextPageToken, files(id, name)',
+			'q' => "'root' in parents");
 		$files_list=$this->drive_service->files->listFiles($optParams);
 		
 
@@ -72,20 +71,20 @@ class Drive
  		else {
 	 		foreach ($files_list->getFiles() as $file) {
 	  			array_push($result,['name'=>$file->getName(),'id'=> $file->getId()]);
-	  	  		//echo("    ".$file->getName().",".$file->getId().'\n');
 	  		}
   		}
   		return $result;
   		
-
-
 	}
+
+
+  
 
 	public function create_doc($title){
 		$file = new Google_Service_Drive_DriveFile();
 		$file->setName($title);
 		$file->setMimeType('application/vnd.google-apps.document');
-			$result = $this->drive_service->files->create($file, array());
+		$result = $this->drive_service->files->create($file, array());
 
 	}
 	public function shared_file($fileId,$mail){
